@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Daily Quiz{% endblock %}
+
+{% block content %}
+<div class="game-hero">
+  <h2>🧠 Daily Quiz</h2>
+  <p>Today's {{ total }} questions. One attempt — good luck!</p>
+</div>
+
+{% if done %}
+  <div class="card" style="text-align:center;">
+    <h2>✅ Today's quiz is complete</h2>
+    <p style="font-size: 22px;">You scored <strong>{{ score }}/{{ total }}</strong></p>
+    <p>Come back tomorrow for 10 new questions.</p>
+    <a href="{{ url_for('games') }}" class="btn btn-lime">← Back to Insulin Quest</a>
+  </div>
+{% else %}
+  <form method="post">
+    {% for q in questions %}
+      <div class="card">
+        <h4>Question {{ loop.index }} of {{ total }}</h4>
+        <p style="font-weight: 600;">{{ q.question }}</p>
+
+        <label class="choice-btn"><input type="radio" name="q_{{ q.id }}" value="0" required> {{ q.choice_a }}</label>
+        <label class="choice-btn"><input type="radio" name="q_{{ q.id }}" value="1"> {{ q.choice_b }}</label>
+        <label class="choice-btn"><input type="radio" name="q_{{ q.id }}" value="2"> {{ q.choice_c }}</label>
+        <label class="choice-btn"><input type="radio" name="q_{{ q.id }}" value="3"> {{ q.choice_d }}</label>
+      </div>
+    {% endfor %}
+
+    <div class="card" style="text-align:center;">
+      <button class="btn btn-lime" type="submit">Submit quiz</button>
+      <a href="{{ url_for('games') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}

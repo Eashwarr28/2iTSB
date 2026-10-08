@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Build Your Injection{% endblock %}
+
+{% block content %}
+<div class="game-hero">
+  <h2>💉 Build Your Injection</h2>
+  <p>Drag the six steps into the correct order, then submit.</p>
+</div>
+
+{% if done %}
+  <div class="card" style="text-align:center;">
+    <h2>✅ Today's round is complete</h2>
+    <p>A new scenario will appear tomorrow.</p>
+    <a href="{{ url_for('games') }}" class="btn btn-lime">← Back to Insulin Quest</a>
+  </div>
+{% else %}
+  <div class="card">
+    {% if scenario %}
+      <div class="scenario-card">
+        <h3 style="margin-top:0;">{{ scenario.context_title }}</h3>
+        <p>{{ scenario.context_blurb }}</p>
+      </div>
+    {% endif %}
+
+    <p style="color: var(--muted);">Drag to reorder.</p>
+
+    <ul class="drag-list" id="steps">
+      {% for step in steps %}
+        <li class="drag-item" draggable="true">{{ step }}</li>
+      {% endfor %}
+    </ul>
+
+    <form method="post" id="orderForm" style="margin-top: 14px;">
+      <input type="hidden" name="order" id="orderField">
+      <button class="btn btn-lime" type="submit" onclick="document.getElementById('orderField').value = JSON.stringify(getOrder());">
+        Submit order
+      </button>
+      <a href="{{ url_for('games') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endif %}
+
+<script>
+const list = document.getElementById('steps');
+if (list) {
+  let dragged = null;
+  list.addEventListener('dragstart', e => { dragged = e.target; e.target.classList.add('dragging'); });
+  list.addEventListener('dragend', e => { e.target.classList.remove('dragging'); });
+  list.addEventListener('dragover', e => {
+    e.preventDefault();
+    const target = e.target.closest('.drag-item');
+    if (!target || target === dragged) return;
+    const rect = target.getBoundingClientRect();
+    const after = (e.clientY - rect.top) / rect.height > 0.5;
+    list.insertBefore(dragged, after ? target.nextSibling : target);
+  });
+}
+function getOrder() {
+  return [...document.querySelectorAll('.drag-item')].map(li => li.textContent.trim());
+}
+</script>
+{% endblock %}

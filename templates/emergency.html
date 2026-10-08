@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Emergency Information{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">🚨 Emergency Information</h2>
+  <p style="color: var(--muted);">This card is available for quick access during a hypoglycemic or hyperosmolar event.</p>
+
+  <form method="post">
+    <label>Primary Emergency Contact Name</label>
+    <input type="text" name="contact_name" value="{{ contact.contact_name or '' }}" required>
+
+    <label>Primary Emergency Contact Phone</label>
+    <input type="tel" name="contact_phone" value="{{ contact.contact_phone or '' }}" required>
+
+    <label>Treating Doctor / Clinic Name</label>
+    <input type="text" name="doctor_name" value="{{ contact.doctor_name or '' }}">
+
+    <label>Doctor / Clinic Phone</label>
+    <input type="tel" name="doctor_phone" value="{{ contact.doctor_phone or '' }}">
+
+    <label>Known Allergies</label>
+    <input type="text" name="allergies" value="{{ contact.allergies or '' }}" placeholder="e.g. Penicillin, latex">
+
+    <label>Hypoglycemia Rescue Protocol</label>
+    <textarea name="rescue_protocol" placeholder="e.g. 15g fast-acting carbs, recheck in 15 min; glucagon IM if unconscious">{{ contact.rescue_protocol or '' }}</textarea>
+
+    <button class="btn" type="submit" style="margin-top: 14px;">Save emergency info</button>
+  </form>
+</div>
+{% endblock %}

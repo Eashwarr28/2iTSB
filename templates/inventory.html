@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">📦 Medicine & Supply Inventory</h2>
+  <p style="color: var(--muted);">Track the contents of your 2iTSB physical box.</p>
+
+  {% if items %}
+    <table style="margin-top: 14px;">
+      <tr><th>Category</th><th>Quantity</th><th>Low Threshold</th><th>Status</th><th>Update</th></tr>
+      {% for i in items %}
+        <tr>
+          <td><strong>{{ i.category|capitalize }}</strong></td>
+          <td>{{ i.quantity }}</td>
+          <td>{{ i.low_threshold }}</td>
+          <td>
+            {% if i.quantity <= i.low_threshold %}
+              <span class="pill pill-danger">Low</span>
+            {% elif i.quantity <= i.low_threshold * 2 %}
+              <span class="pill pill-warn">Amber</span>
+            {% else %}
+              <span class="pill pill-success">OK</span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="post" style="display: flex; gap: 6px;">
+              <input type="hidden" name="item_id" value="{{ i.id }}">
+              <input type="number" name="quantity" value="{{ i.quantity }}" style="width: 70px;">
+              <input type="number" name="low_threshold" value="{{ i.low_threshold }}" style="width: 70px;">
+              <button class="btn btn-sm btn-secondary" type="submit">Save</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <a href="#" class="btn btn-secondary btn-sm" style="margin-top: 14px;" onclick="alert('Refill checklist generated (demo).');">Generate pharmacy refill list</a>
+  {% else %}
+    <p style="color: var(--muted);">No items tracked yet.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h3 style="margin-top: 0;">Add New Item</h3>
+  <form method="post">
+    <div class="grid grid-3">
+      <div>
+        <label>Category</label>
+        <select name="category">
+          <option value="pen">Insulin Pen</option>
+          <option value="needle">Pen Needle</option>
+          <option value="lancet">Lancet</option>
+          <option value="strip">Test Strip</option>
+          <option value="cartridge">Insulin Cartridge</option>
+        </select>
+      </div>
+      <div><label>Quantity</label><input type="number" name="quantity" value="0"></div>
+      <div><label>Low Threshold</label><input type="number" name="low_threshold" value="5"></div>
+    </div>
+    <button class="btn" type="submit" style="margin-top: 14px;">+ Add item</button>
+  </form>
+</div>
+{% endblock %}

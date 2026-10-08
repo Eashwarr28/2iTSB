@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Privacy & Permissions{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 620px; margin: 0 auto;">
+  <h2 style="margin-top: 0;">🔐 Privacy & Permission Management</h2>
+  <p style="color: var(--muted);">Granular control over who sees your health data.</p>
+
+  <form method="post">
+    <label style="display: flex; justify-content: space-between; align-items: center; padding: 14px; border: 1px solid var(--line); border-radius: 10px;">
+      <div>
+        <div style="font-weight: 600;">Caregiver Access</div>
+        <div style="font-weight: 400; font-size: 13px; color: var(--muted);">Allow designated family member to view daily vitals</div>
+      </div>
+      <input type="checkbox" name="caregiver_access" {% if privacy.caregiver_access %}checked{% endif %} style="width: auto;">
+    </label>
+
+    <label style="display: flex; justify-content: space-between; align-items: center; padding: 14px; border: 1px solid var(--line); border-radius: 10px; margin-top: 10px;">
+      <div>
+        <div style="font-weight: 600;">Clinician Data Sync</div>
+        <div style="font-weight: 400; font-size: 13px; color: var(--muted);">Authorize transmission of logs to hospital system</div>
+      </div>
+      <input type="checkbox" name="clinician_sync" {% if privacy.clinician_sync %}checked{% endif %} style="width: auto;">
+    </label>
+
+    <label style="display: flex; justify-content: space-between; align-items: center; padding: 14px; border: 1px solid var(--line); border-radius: 10px; margin-top: 10px;">
+      <div>
+        <div style="font-weight: 600;">Share Emergency Info</div>
+        <div style="font-weight: 400; font-size: 13px; color: var(--muted);">Allow first responders to view allergies and contacts</div>
+      </div>
+      <input type="checkbox" name="share_emergency" {% if privacy.share_emergency %}checked{% endif %} style="width: auto;">
+    </label>
+
+    <button class="btn" type="submit" style="margin-top: 18px;">Save preferences</button>
+  </form>
+
+  <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--line);">
+
+  <h3>Consent Withdrawal</h3>
+  <p style="color: var(--muted); font-size: 14px;">Revoking access stops all external data sharing.</p>
+  <button class="btn btn-danger" type="button" onclick="alert('Consent withdrawal requested. This would revoke external access in a production system.');">Revoke external access</button>
+</div>
+{% endblock %}

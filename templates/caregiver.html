@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Caregiver Companion{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">Caregiver Companion View</h2>
+  <p style="color: var(--muted);">Pair with a patient using their 4-digit patient code.</p>
+
+  <form method="post" action="{{ url_for('caregiver_pair') }}" style="display: flex; gap: 10px; max-width: 380px;">
+    <input type="text" name="code" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 0415" required>
+    <button class="btn" type="submit">Pair</button>
+  </form>
+</div>
+
+{% for row in patients %}
+<div class="card">
+  <!-- Glucose hero -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+    <div>
+      <h3 style="margin: 0;">{{ row.patient.name }}</h3>
+      <div style="color: var(--muted); font-size: 14px;">
+        Patient Code: <strong>{{ row.patient.patient_code or '—' }}</strong>
+        {% if row.patient.identification_id %} · MRN: {{ row.patient.identification_id }}{% endif %}
+      </div>
+    </div>
+    {% if row.latest %}
+      {% set g = row.latest.glucose %}
+      {% if g is none %}
+        {% set pill = 'pill' %}{% set label = 'No data' %}
+      {% elif g < 4.4 %}
+        {% set pill = 'pill-danger' %}{% set label = 'Low' %}
+      {% elif g > 10.0 %}
+        {% set pill = 'pill-danger' %}{% set label = 'High' %}
+      {% elif g > 7.0 %}
+        {% set pill = 'pill-warn' %}{% set label = 'Moderate' %}
+      {% else %}
+        {% set pill = 'pill-success' %}{% set label = 'Stable' %}
+      {% endif %}
+      <div style="text-align: right;">
+        <div style="font-family: Georgia, serif; font-size: 40px; font-weight: 700; color: var(--green-dark); line-height: 1;">
+          {{ g if g is not none else '—' }}
+          <span style="font-size: 16px; color: var(--muted); font-weight: 400;">mmol/L</span>
+        </div>
+        <div style="margin-top: 6px;">
+          <span class="pill {{ pill }}">{{ label }}</span>
+        </div>
+        <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">
+          {{ row.latest.created_at.strftime('%d %b %H:%M') }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Full records table -->
+  <h4 style="margin: 14px 0 6px;">Full Health Records</h4>
+  {% if row.readings %}
+    <table>
+      <tr>
+        <th>When</th>
+        <th>Glucose</th>
+        <th>Context</th>
+        <th>BP</th>
+        <th>SpO₂</th>
+        <th>Temp</th>
+        <th>Weight</th>
+        <th>Symptoms</th>
+        <th>Status</th>
+      </tr>
+      {% for r in row.readings %}
+        {% set g = r.glucose %}
+        {% if g is none %}
+          {% set pill = 'pill' %}{% set label = '—' %}
+        {% elif g < 4.4 %}
+          {% set pill = 'pill-danger' %}{% set label = 'Low' %}
+        {% elif g > 10.0 %}
+          {% set pill = 'pill-danger' %}{% set label = 'High' %}
+        {% elif g > 7.0 %}
+          {% set pill = 'pill-warn' %}{% set label = 'Moderate' %}
+        {% else %}
+          {% set pill = 'pill-success' %}{% set label = 'Stable' %}
+        {% endif %}
+        <tr>
+          <td>{{ r.created_at.strftime('%d %b · %H:%M') }}</td>
+          <td>{{ g if g is not none else '—' }} mmol/L</td>
+          <td>{{ r.context or '—' }}</td>
+          <td>{% if r.systolic %}{{ r.systolic }}/{{ r.diastolic }}{% else %}—{% endif %}</td>
+          <td>{{ r.spo2 or '—' }}</td>
+          <td>{{ r.temperature or '—' }}</td>
+          <td>{{ r.weight or '—' }}</td>
+          <td>{{ r.symptoms or '—' }}</td>
+          <td><span class="pill {{ pill }}">{{ label }}</span></td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p style="color: var(--muted);">No readings yet.</p>
+  {% endif %}
+</div>
+{% else %}
+<div class="card">
+  <p style="color: var(--muted);">You haven't paired with a patient yet.</p>
+</div>
+{% endfor %}
+{% endblock %}

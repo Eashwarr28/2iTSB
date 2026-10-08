@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}ASK Assistant{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">🤖 ASK — Your Insulin Assistant</h2>
+  <p style="color: var(--muted); font-size: 14px;">
+    ASK provides general guidance and does not replace your clinician. In an emergency, call 999.
+  </p>
+
+  <div class="chat-box">
+    {% if history %}
+      {% for m in history %}
+        <div class="chat-msg {% if m.sender == 'user' %}chat-user{% else %}chat-ask{% endif %}">
+          {{ m.content }}
+        </div>
+      {% endfor %}
+    {% elif welcome %}
+      <div class="chat-msg chat-ask">{{ welcome }}</div>
+    {% else %}
+      <div class="chat-msg chat-ask">Hi! I'm ASK. Ask me about symptoms, injection technique, or missed doses.</div>
+    {% endif %}
+  </div>
+
+  <form method="post" id="askForm" style="margin-top: 14px;">
+    <label>Quick prompts</label>
+    <div class="chips" style="margin-bottom: 10px;">
+      <button type="button" class="chip" onclick="quickAsk(this)" data-q="Hello">Hello</button>
+      <button type="button" class="chip" onclick="quickAsk(this)" data-q="I feel dizzy and shaky">I feel dizzy & shaky</button>
+      <button type="button" class="chip" onclick="quickAsk(this)" data-q="I've been sweating and having sudden hunger cravings">Sweating & hunger cravings</button>
+      <button type="button" class="chip" onclick="quickAsk(this)" data-q="How do I rotate injection sites?">How do I rotate sites?</button>
+      <button type="button" class="chip" onclick="quickAsk(this)" data-q="I forgot my morning dose">Forgot morning dose?</button>
+      <button type="button" class="chip" onclick="quickAsk(this)" data-q="How do I store insulin?">Insulin storage</button>
+    </div>
+
+    <textarea name="query" id="askInput" placeholder="Type your question..." required></textarea>
+    <button class="btn" type="submit" style="margin-top: 10px;">Send to ASK</button>
+  </form>
+</div>
+
+<script>
+function quickAsk(btn) {
+  document.getElementById('askInput').value = btn.dataset.q;
+  document.getElementById('askForm').submit();
+}
+</script>
+{% endblock %}

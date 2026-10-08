@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Clinician Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">Healthcare Professional Portal</h2>
+  <p style="color: var(--muted);">Search patients, review latest vitals, generate reports.</p>
+  <form method="get" style="display: flex; gap: 10px; max-width: 540px;">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search by name, MRN, or phone">
+    <button class="btn" type="submit">Search</button>
+    <a href="{{ url_for('clinician_dashboard') }}" class="btn btn-secondary">Clear</a>
+  </form>
+</div>
+
+{% for row in patient_data %}
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <div>
+      <h3 style="margin: 0;">{{ row.patient.name }}</h3>
+      <div style="color: var(--muted); font-size: 14px;">
+        MRN: {{ row.patient.identification_id or '—' }} · Phone: {{ row.patient.phone or '—' }}
+      </div>
+    </div>
+    {% if row.latest %}
+      <div class="stat" style="text-align: right;">
+        <div class="stat-value" style="font-size: 22px;">{{ row.latest.glucose or '—' }}<span style="font-size: 13px;"> mmol/L</span></div>
+        <div class="stat-label">Latest · {{ row.latest.created_at.strftime('%d %b %H:%M') }}</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="margin-top: 14px; display: flex; gap: 10px;">
+    <a href="{{ url_for('clinician_report', patient_id=row.patient.id) }}" class="btn btn-lime btn-sm">📄 Generate report</a>
+  </div>
+
+  <form method="post" action="{{ url_for('add_clinical_note', patient_id=row.patient.id) }}" style="margin-top: 14px;">
+    <label>Add clinical note / directive</label>
+    <textarea name="note" placeholder="Adjust insulin-to-carb ratio, basal dosage, or general observation..."></textarea>
+    <button class="btn btn-sm" type="submit" style="margin-top: 8px;">Save note</button>
+  </form>
+</div>
+{% else %}
+<div class="card"><p style="color: var(--muted);">No patients found.</p></div>
+{% endfor %}
+{% endblock %}

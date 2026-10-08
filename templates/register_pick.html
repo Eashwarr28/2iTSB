@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="card narrow" style="margin: 30px auto; text-align: center;">
+  <h2 style="margin-top: 0;">Register a new profile</h2>
+  <p style="color: var(--muted);">Choose how you'll use 2ITSB.</p>
+
+  <div class="pill-row" style="justify-content: center;">
+    <a class="pill-btn" href="{{ url_for('register', role='patient') }}">Patient</a>
+    <a class="pill-btn" href="{{ url_for('register', role='caregiver') }}">Caregiver</a>
+  </div>
+
+  <p style="margin-top: 22px; font-size: 14px; color: var(--muted);">
+    Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+  </p>
+</div>
+{% endblock %}

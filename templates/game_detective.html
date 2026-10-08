@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Emergency Detective{% endblock %}
+
+{% block content %}
+<div class="game-hero">
+  <h2>🕵️ Emergency Detective</h2>
+  <p>Today's {{ total }} scenarios. One attempt — make them count!</p>
+</div>
+
+{% if done %}
+  <div class="card" style="text-align:center;">
+    <h2>✅ Today's round is complete</h2>
+    <p>Come back tomorrow for new scenarios.</p>
+    <a href="{{ url_for('games') }}" class="btn btn-lime">← Back to Insulin Quest</a>
+  </div>
+{% else %}
+  <form method="post">
+    {% for s in scenarios %}
+      <div class="card">
+        <div class="scenario-card">
+          <h3 style="margin-top:0;">Scenario {{ loop.index }} of {{ total }}</h3>
+          <p>{{ s.situation }}</p>
+        </div>
+
+        <label class="choice-btn"><input type="radio" name="q_{{ s.id }}" value="0" required> {{ s.choice_a }}</label>
+        <label class="choice-btn"><input type="radio" name="q_{{ s.id }}" value="1"> {{ s.choice_b }}</label>
+        <label class="choice-btn"><input type="radio" name="q_{{ s.id }}" value="2"> {{ s.choice_c }}</label>
+        <label class="choice-btn"><input type="radio" name="q_{{ s.id }}" value="3"> {{ s.choice_d }}</label>
+      </div>
+    {% endfor %}
+
+    <div class="card" style="text-align:center;">
+      <button class="btn btn-lime" type="submit">Submit answers</button>
+      <a href="{{ url_for('games') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}

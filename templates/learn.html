@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Trophy Cabinet{% endblock %}
+
+{% block content %}
+
+<div class="game-hero">
+  <h2>🏆 Your Trophy Cabinet</h2>
+  <p>Earn badges by playing daily games and logging health data.</p>
+</div>
+
+<div class="card">
+  <div class="grid grid-3">
+    {% for b in badges %}
+      <div class="badge-card {% if b.id in earned %}earned{% endif %}">
+        <div style="font-size: 32px;">{{ b.icon or '⭐' }}</div>
+        <div style="font-weight: 700; margin-top: 6px;">{{ b.label }}</div>
+        <div style="font-size: 13px; color: var(--muted);">{{ b.description }}</div>
+        {% if b.id in earned %}
+          <div class="pill pill-success" style="margin-top: 8px;">Earned</div>
+        {% else %}
+          <div class="pill" style="margin-top: 8px;">Locked</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card" style="text-align:center;">
+  <a href="{{ url_for('games') }}" class="btn btn-lime">🎮 Play Today's Games</a>
+</div>
+
+{% endblock %}

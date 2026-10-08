@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Register as {{ role|capitalize }}{% endblock %}
+
+{% block content %}
+<div class="card narrow" style="margin: 24px auto;">
+  <h2 style="margin-top: 0;">Create your {{ role|capitalize }} account</h2>
+  <p style="color: var(--muted); margin-top: 0;">All fields marked * are required.</p>
+
+  <form method="post" id="registerForm">
+    <label>Full Name *</label>
+    <input type="text" name="name" required>
+
+    <label>Email / Username *</label>
+    <input type="email" name="email" id="emailInput" required>
+    <div class="field-hint" id="emailHint">Must be a valid email address.</div>
+
+    <label>Identification ID (MyKad / Passport / MRN)</label>
+    <input type="text" name="identification_id" placeholder="Optional">
+
+    <label>Phone</label>
+    <input type="tel" name="phone" placeholder="+60 12-345 6789">
+
+    <label>Password *</label>
+    <input type="password" name="password" id="pwInput" required minlength="6">
+    <div class="field-hint" id="pwHint">At least 6 characters, must contain at least one letter and one number.</div>
+
+    <label>Confirm Password *</label>
+    <input type="password" name="confirm_password" id="pwConfirm" required>
+    <div class="field-hint" id="pwConfirmHint"></div>
+
+    <label>Patient Pairing Code (optional)</label>
+    <input type="text" name="pairing_code" maxlength="4" pattern="[0-9]{4}" placeholder="4-digit code">
+    <div class="field-hint">Ask your patient for their 4-digit code to link accounts now. You can also add this later.</div>
+
+    <button class="btn btn-lime btn-block" type="submit" style="margin-top: 20px;">
+      Create Account <span class="btn-arrow">→</span>
+    </button>
+  </form>
+
+  <p style="margin-top: 20px; text-align: center; color: var(--muted); font-size: 14px;">
+    Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+  </p>
+</div>
+
+<script>
+const emailInput = document.getElementById('emailInput');
+const emailHint = document.getElementById('emailHint');
+const pwInput = document.getElementById('pwInput');
+const pwHint = document.getElementById('pwHint');
+const pwConfirm = document.getElementById('pwConfirm');
+const pwConfirmHint = document.getElementById('pwConfirmHint');
+let emailTimeout;
+
+emailInput.addEventListener('input', () => {
+  clearTimeout(emailTimeout);
+  const val = emailInput.value.trim();
+  if (!val) { emailHint.textContent = 'Must be a valid email address.'; emailHint.className = 'field-hint'; return; }
+  emailTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch('{{ url_for("check_email") }}?email=' + encodeURIComponent(val));
+      const data = await res.json();
+      if (data.available) {
+        emailHint.textContent = '✓ Available';
+        emailHint.className = 'field-hint ok';
+      } else {
+        emailHint.textContent = '✗ This email is already registered';
+        emailHint.className = 'field-hint bad';
+      }
+    } catch (e) {}
+  }, 350);
+});
+
+function checkPassword() {
+  const v = pwInput.value;
+  const hasLetter = /[A-Za-z]/.test(v);
+  const hasNumber = /[0-9]/.test(v);
+  if (v.length === 0) { pwHint.textContent = 'At least 6 characters, must contain at least one letter and one number.'; pwHint.className = 'field-hint'; return; }
+  if (v.length < 6 || !hasLetter || !hasNumber) {
+    pwHint.textContent = '✗ Must be 6+ characters and include a letter and a number.';
+    pwHint.className = 'field-hint bad';
+  } else {
+    pwHint.textContent = '✓ Password meets requirements';
+    pwHint.className = 'field-hint ok';
+  }
+}
+pwInput.addEventListener('input', checkPassword);
+
+pwConfirm.addEventListener('input', () => {
+  if (!pwConfirm.value) { pwConfirmHint.textContent = ''; return; }
+  if (pwConfirm.value === pwInput.value) {
+    pwConfirmHint.textContent = '✓ Passwords match';
+    pwConfirmHint.className = 'field-hint ok';
+  } else {
+    pwConfirmHint.textContent = '✗ Passwords do not match';
+    pwConfirmHint.className = 'field-hint bad';
+  }
+});
+</script>
+{% endblock %}

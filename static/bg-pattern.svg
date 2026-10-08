@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <g fill="none" stroke="#a3e635" stroke-width="1.2" opacity="0.35">
+    <!-- syringe -->
+    <g transform="translate(20,20) rotate(-30)">
+      <rect x="0" y="0" width="40" height="8" rx="2"/>
+      <line x1="40" y1="4" x2="52" y2="4"/>
+      <line x1="8" y1="0" x2="8" y2="8"/>
+      <line x1="14" y1="0" x2="14" y2="8"/>
+    </g>
+    <!-- droplet -->
+    <path d="M170 30 C 160 45, 158 52, 170 60 C 182 52, 180 45, 170 30 Z"/>
+    <!-- pen -->
+    <g transform="translate(30,120) rotate(15)">
+      <rect x="0" y="0" width="46" height="10" rx="3"/>
+      <rect x="46" y="2" width="10" height="6" rx="2"/>
+    </g>
+    <!-- heart pulse -->
+    <path d="M120 130 c -6 -10 -22 -8 -22 4 c 0 10 14 16 22 24 c 8 -8 22 -14 22 -24 c 0 -12 -16 -14 -22 -4 Z"/>
+    <!-- capsule -->
+    <g transform="translate(150,180) rotate(30)">
+      <rect x="0" y="0" width="34" height="12" rx="6"/>
+      <line x1="17" y1="0" x2="17" y2="12"/>
+    </g>
+    <!-- meter -->
+    <rect x="40" y="180" width="34" height="24" rx="4"/>
+    <rect x="46" y="186" width="22" height="8" rx="1"/>
+    <!-- needle -->
+    <line x1="200" y1="220" x2="230" y2="200"/>
+    <circle cx="200" cy="220" r="3"/>
+  </g>
+</svg>

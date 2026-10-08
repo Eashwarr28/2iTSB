@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<div class="card narrow" style="margin: 30px auto;">
+  <h2 style="margin-top: 0;">
+    {% if role_hint == 'patient' %}Log in as Patient
+    {% elif role_hint == 'caregiver' %}Log in as Caregiver
+    {% else %}Welcome back{% endif %}
+  </h2>
+  <p style="color: var(--muted); margin-top: 0;">Log in to your 2ITSB account.</p>
+
+  <form method="post">
+    <label>Email / Username</label>
+    <input type="text" name="email" required autofocus>
+
+    <label>Password</label>
+    <input type="password" name="password" required>
+
+    <label style="display: flex; align-items: center; gap: 8px; font-weight: 500; margin-top: 14px;">
+      <input type="checkbox" name="remember" value="1" style="width: auto;">
+      Remember me on this device
+    </label>
+
+    <button class="btn btn-lime btn-block" type="submit" style="margin-top: 18px;">
+      Login <span class="btn-arrow">→</span>
+    </button>
+  </form>
+
+  <p style="margin-top: 20px; text-align: center; color: var(--muted); font-size: 14px;">
+    New here?
+    <a href="{{ url_for('register', role=role_hint) if role_hint else url_for('register_pick') }}">Register →</a>
+  </p>
+  <p style="text-align: center; font-size: 13px;">
+    <a href="#" onclick="alert('Please contact your administrator or use the demo accounts.'); return false;">Forgot username or password?</a>
+  </p>
+</div>
+{% endblock %}

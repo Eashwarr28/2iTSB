@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Injection Technique{% endblock %}
+
+{% block content %}
+<div class="grid grid-2">
+
+  <div class="card">
+    <h2 style="margin-top: 0;">Injection Site Logger</h2>
+    <p style="color: var(--muted);">Rotate sites to prevent lipohypertrophy.</p>
+
+    <form method="post">
+      <label>Select Site</label>
+      <div class="chips">
+        {% for site in ['Abdomen-Upper-Left', 'Abdomen-Upper-Right', 'Abdomen-Lower-Left', 'Abdomen-Lower-Right', 'Thigh-Left', 'Thigh-Right', 'Arm-Left', 'Arm-Right', 'Buttocks-Left', 'Buttocks-Right'] %}
+          <label class="chip">
+            <input type="radio" name="site" value="{{ site }}" required>
+            {{ site }}
+          </label>
+        {% endfor %}
+      </div>
+
+      <label style="margin-top: 16px;">Pre-Injection Checklist</label>
+      <label style="font-weight: 400; display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" name="checklist_ok" value="1" style="width: auto;">
+        I washed hands, primed the needle, and used correct pinch angle
+      </label>
+
+      <button class="btn" type="submit" style="margin-top: 16px;">Log injection</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top: 0;">Recent Sites</h3>
+    {% if logs %}
+      <table>
+        <tr><th>Site</th><th>Checklist</th><th>When</th></tr>
+        {% for l in logs %}
+          <tr>
+            <td>{{ l.site }}</td>
+            <td>{% if l.checklist_ok %}<span class="pill pill-success">OK</span>{% else %}<span class="pill pill-warn">—</span>{% endif %}</td>
+            <td>{{ l.created_at.strftime('%d %b - %H:%M') }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p style="color: var(--muted);">No injections logged yet.</p>
+    {% endif %}
+
+    <div style="margin-top: 20px; background: #f2fcf7; border-left: 5px solid var(--accent); padding: 14px; border-radius: 8px;">
+      <strong>Tip:</strong> Use a fresh site each injection. Avoid the last 3 sites shown above for the next dose.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.chip input').forEach(inp => {
+    inp.addEventListener('change', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      inp.closest('.chip').classList.add('selected');
+    });
+  });
+</script>
+{% endblock %}

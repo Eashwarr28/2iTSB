@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block body_class %}landing-page{% endblock %}
+{% block backbar %}{% endblock %}
+
+{% block content %}
+
+<div class="hero-wrap">
+  <div class="hero">
+    <div class="hero-text">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="2ITSB" class="hero-logo">
+      <h1>Smart Insulin Injection Therapy Management System</h1>
+      <p>The 2ITSB digital platform extends your physical insulin injection smart box into the home, helping you track glucose, monitor doses, manage supplies, and connect with caregivers and clinicians. Scan your kit's QR code to begin.</p>
+    </div>
+    <div class="hero-image" role="img" aria-label="Insulin therapy illustration"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Welcome to 2ITSB</div>
+  <h2 style="margin-top: 0;">Choose how you use 2ITSB</h2>
+  <p style="color: var(--muted); margin-top: 0;">Select your role to enter the appropriate experience.</p>
+
+  <div class="pill-row">
+    <a class="pill-btn" href="{{ url_for('login', as='patient') }}">Patient</a>
+    <a class="pill-btn" href="{{ url_for('login', as='caregiver') }}">Caregiver</a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Available in 2iTSB</div>
+  <h2 style="margin-top: 0;">Everything you need for safer insulin therapy</h2>
+
+  <div class="features-grid" style="margin-top: 14px;">
+    <div class="feature-item"><div class="feature-icon">🩸</div><div><h4>Glucose Logging</h4><p>Track blood glucose with context and trend view.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">💉</div><div><h4>Injection Technique</h4><p>Site rotation, checklist, and quiz-based learning.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📦</div><div><h4>Supply Inventory</h4><p>Monitor pens, needles, lancets, and strips.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⏰</div><div><h4>Smart Reminders</h4><p>Dose schedules and appointment tracking.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🎮</div><div><h4>Gamified Learning</h4><p>Interactive games, badges, and quizzes.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🤖</div><div><h4>ASK Assistant</h4><p>Guidance for symptoms, techniques, and doses.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🚨</div><div><h4>Emergency Info</h4><p>One-tap contacts, allergies, and rescue protocol.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">👩‍⚕️</div><div><h4>Clinician Portal</h4><p>Doctors and nurses review patient logs.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">👨‍👩‍👧</div><div><h4>Caregiver Link</h4><p>Family alert preferences and encouragement.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🔐</div><div><h4>Privacy Controls</h4><p>Granular consent over data sharing.</p></div></div>
+  </div>
+</div>
+
+{% endblock %}

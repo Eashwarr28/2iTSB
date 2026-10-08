@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Report — {{ patient.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">Glycemic Report — {{ patient.name }}</h2>
+  <p style="color: var(--muted);">
+    MRN: {{ patient.identification_id or '—' }} ·
+    Period: {{ start.strftime('%d %b %Y') }} – {{ end.strftime('%d %b %Y') }} ·
+    <strong>Week {{ week }}</strong>
+  </p>
+
+  <h3 style="margin-top: 20px;">Readings</h3>
+  {% if readings %}
+    <table>
+      <tr><th>Date</th><th>Glucose</th><th>Context</th><th>BP</th><th>SpO₂</th><th>Temp</th><th>Weight</th></tr>
+      {% for r in readings %}
+        <tr>
+          <td>{{ r.created_at.strftime('%d %b · %H:%M') }}</td>
+          <td>{{ r.glucose or '—' }} mmol/L</td>
+          <td>{{ r.context or '—' }}</td>
+          <td>{% if r.systolic %}{{ r.systolic }}/{{ r.diastolic }}{% else %}—{% endif %}</td>
+          <td>{{ r.spo2 or '—' }}</td>
+          <td>{{ r.temperature or '—' }}</td>
+          <td>{{ r.weight or '—' }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p style="color: var(--muted);">No readings in this week.</p>
+  {% endif %}
+
+  <h3 style="margin-top: 24px;">Glucose Trend</h3>
+  <div class="report-graph">{{ graph_svg|safe }}</div>
+
+  <div class="report-pagination">
+    <a class="btn btn-secondary btn-sm" href="{{ url_for('clinician_report', patient_id=patient.id, week=week-1) }}" {% if week <= 1 %}style="visibility:hidden"{% endif %}>◀ Previous week</a>
+    <strong>Week {{ week }} of 4</strong>
+    {% if week < 4 %}
+      <a class="btn btn-secondary btn-sm" href="{{ url_for('clinician_report', patient_id=patient.id, week=week+1) }}">Next week ▶</a>
+    {% endif %}
+  </div>
+
+  <div style="margin-top: 24px;">
+    <button class="btn btn-lime" onclick="window.print()">🖨️ Print / Save as PDF</button>
+    <a href="{{ url_for('clinician_dashboard') }}" class="btn btn-secondary">Back to patients</a>
+  </div>
+</div>
+
+{% if notes %}
+<div class="card">
+  <h3 style="margin-top: 0;">Clinical Notes (latest 10)</h3>
+  {% for n in notes %}
+    <div style="border-left: 4px solid var(--green-dark); padding: 8px 12px; margin: 8px 0; background: var(--cream);">
+      <div style="font-size: 12px; color: var(--muted);">{{ n.created_at.strftime('%d %b %Y %H:%M') }}</div>
+      {{ n.note }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

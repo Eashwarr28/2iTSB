@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}2ITSB{% endblock %} · 2ITSB</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+{% block topbar %}
+<div class="topbar">
+  <div class="topbar-inner">
+    <button class="hamburger" onclick="openDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="{{ url_for('index') }}" class="brand">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="2ITSB">
+    </a>
+    <div class="topbar-actions">
+      {% if current_user %}
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register_pick') }}" class="btn-lime">Register</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer">
+  <button class="close-btn" onclick="closeDrawer()">×</button>
+  <h3>Menu</h3>
+  <a href="{{ url_for('index') }}">Home</a>
+  {% if current_user %}
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    {% if current_user.role == 'patient' %}
+      <a href="{{ url_for('injection') }}">Injection Technique</a>
+      <a href="{{ url_for('inventory') }}">Medicine & Supply Inventory</a>
+      <a href="{{ url_for('games') }}">Gamified Learning</a>
+      <a href="{{ url_for('emergency') }}">Emergency Info</a>
+      <a href="{{ url_for('privacy') }}">Settings & Privacy</a>
+    {% elif current_user.role in ('doctor', 'nurse') %}
+      <a href="{{ url_for('clinician_dashboard') }}">Patient Portal</a>
+    {% elif current_user.role == 'caregiver' %}
+      <a href="{{ url_for('caregiver_dashboard') }}">Caregiver Companion</a>
+    {% endif %}
+    <a href="{{ url_for('ask') }}">ASK Assistant</a>
+    <a href="{{ url_for('messages') }}">Messages</a>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register_pick') }}">Register</a>
+  {% endif %}
+  <a href="#footer">About 2ITSB</a>
+  <a href="#footer">Contact / Help</a>
+</aside>
+{% endblock %}
+
+{% block backbar %}
+<div class="back-bar">
+  <button onclick="goBack()" class="back-btn" type="button">← Back</button>
+  <script>
+  function goBack() {
+    if (window.history.length > 1) { window.history.back(); }
+    else { window.location.href = "{{ url_for('index') }}"; }
+  }
+  </script>
+</div>
+{% endblock %}
+
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, msg in messages %}
+        <div class="flash {{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<a href="{{ url_for('ask') }}" class="ask-mascot" title="Ask 2ITSB Assistant">🤖</a>
+
+{% block footer %}
+<footer class="site-footer" id="footer">
+  <div class="footer-inner">
+
+    <div class="footer-col">
+      <h4>About 2ITSB</h4>
+      <p>Smart Insulin Injection Therapy Management System.</p>
+      <p>A digital companion for the 2iTSB physical kit.</p>
+      <p>Built for patients, caregivers, nurses, and doctors.</p>
+      <p>Track glucose, monitor doses, and manage supplies.</p>
+      <p>Connect with your care team anytime, anywhere.</p>
+    </div>
+
+    <div class="footer-col footer-col-right">
+      <h4>Contact</h4>
+      <p>📧 hello@2itsb.com</p>
+      <p>📞 +60 104354191</p>
+      <p>📞 +60 198038271</p>
+      <p>📍 Kuala Lumpur, Malaysia</p>
+    </div>
+
+  </div>
+  <div class="footer-bottom">© 2026 2ITSB. All rights reserved.</div>
+</footer>
+{% endblock %}
+
+<script>
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBackdrop').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<div class="grid grid-2">
+
+  <div class="card">
+    <h3 style="margin-top: 0;">Send a message</h3>
+    <form method="post">
+      <label>To</label>
+      <select name="receiver_id" required>
+        {% for c in clinicians %}
+          <option value="{{ c.id }}">{{ c.name }} ({{ c.role }})</option>
+        {% endfor %}
+      </select>
+
+      <label>Message</label>
+      <textarea name="message" required></textarea>
+
+      <button class="btn" type="submit" style="margin-top: 10px;">Send</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top: 0;">Inbox</h3>
+    {% if inbox %}
+      {% for m in inbox %}
+        <div style="padding: 10px 0; border-bottom: 1px solid var(--line);">
+          <div style="font-size: 13px; color: var(--muted);">
+            From {{ m.sender.name }} · {{ m.created_at.strftime('%d %b %H:%M') }}
+          </div>
+          <div>{{ m.message }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="color: var(--muted);">No messages yet.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
