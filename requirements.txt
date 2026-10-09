@@ -4,3 +4,4 @@ Werkzeug
 requests
 gunicorn
 psycopg2-binary
+SQLAlchemy<2.1
