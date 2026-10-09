@@ -41,7 +41,7 @@ a:hover { text-decoration: underline; }
 .container { max-width: 1150px; margin: 0 auto; padding: 22px; }
 .narrow { max-width: 480px; }
 
-/* TOPBAR */
+/* TOPBAR — logo always centred */
 .topbar {
   background: var(--green-dark); color: #fff; padding: 12px 0;
   position: sticky; top: 0; z-index: 100;
@@ -50,13 +50,14 @@ a:hover { text-decoration: underline; }
 .topbar-inner {
   display: flex; align-items: center; justify-content: space-between;
   max-width: 1150px; margin: 0 auto; padding: 0 22px; gap: 16px;
+  min-height: 56px;
 }
-.topbar .brand img { height: 46px; display: block; }
-.topbar-actions { display: flex; align-items: center; gap: 10px; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .topbar-actions a, .topbar-actions button {
   color: #fff; padding: 8px 14px; border-radius: 999px;
   border: 1.5px solid rgba(255,255,255,.35);
   background: transparent; font-weight: 600; font-size: 14px; cursor: pointer;
+  white-space: nowrap;
 }
 .topbar-actions a:hover, .topbar-actions button:hover {
   background: var(--lime); color: var(--green-dark); border-color: var(--lime);
@@ -64,6 +65,19 @@ a:hover { text-decoration: underline; }
 }
 .topbar-actions .btn-lime { background: var(--lime); color: var(--green-dark); border-color: var(--lime); }
 .topbar-actions .btn-lime:hover { background: var(--lime-dark); border-color: var(--lime-dark); }
+
+/* Brand link is centred with absolute positioning so it's always in the middle */
+.topbar .brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.topbar-inner { position: relative; }
+.topbar .brand img { height: 44px; display: block; }
 
 /* Hide topbar logo ONLY on landing page */
 .landing-page .topbar .brand img { display: none; }
@@ -311,6 +325,7 @@ tr:hover td { background: #fbf9f2; }
 
 /* REPORT GRAPH */
 .report-graph { background: #fff; border-radius: 10px; padding: 12px; border: 1px solid var(--line); overflow-x: auto; }
+.report-graph svg { max-width: 100%; height: auto; display: block; }
 .report-pagination { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 16px; }
 
 /* GAMES */
@@ -351,10 +366,34 @@ tr:hover td { background: #fbf9f2; }
 .drag-item.correct { border-color: var(--accent); background: #f2fcf7; }
 .drag-item.wrong { border-color: var(--danger); background: #fbe6e2; }
 
+/* --- Mobile responsiveness fixes --- */
+
+/* Make all data tables scroll horizontally on small screens */
+.card table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 721px) {
+  .card table {
+    display: table;
+    overflow-x: visible;
+    white-space: normal;
+  }
+}
+
+/* Tighten table padding on mobile */
 @media (max-width: 720px) {
+  table th, table td {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
   .hero { grid-template-columns: 1fr; }
   .hero-text { padding: 32px 22px; }
   .hero-image { min-height: 240px; }
   .footer-inner { grid-template-columns: 1fr; gap: 30px; }
   .topbar-actions a, .topbar-actions button { padding: 6px 10px; font-size: 13px; }
+  .topbar .brand img { height: 36px; }
 }

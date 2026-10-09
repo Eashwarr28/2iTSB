@@ -44,8 +44,6 @@
       <a href="{{ url_for('privacy') }}">Settings & Privacy</a>
     {% elif current_user.role in ('doctor', 'nurse') %}
       <a href="{{ url_for('clinician_dashboard') }}">Patient Portal</a>
-    {% elif current_user.role == 'caregiver' %}
-      <a href="{{ url_for('caregiver_dashboard') }}">Caregiver Companion</a>
     {% endif %}
     <a href="{{ url_for('ask') }}">ASK Assistant</a>
     <a href="{{ url_for('messages') }}">Messages</a>
@@ -97,7 +95,7 @@
       <p>Connect with your care team anytime, anywhere.</p>
     </div>
 
-    <div class="footer-col footer-col-right">
+    <div class="footer-col">
       <h4>Contact</h4>
       <p>📧 hello@2itsb.com</p>
       <p>📞 +60 104354191</p>

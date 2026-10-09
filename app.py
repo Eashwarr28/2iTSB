@@ -883,7 +883,9 @@ def _build_glucose_svg(points, width=700, height=220):
         x, _, _, dt = coords[i]
         x_labels.append(f'<text x="{x:.1f}" y="{height-10}" font-size="11" text-anchor="middle" fill="#5b6478">{dt.strftime("%d %b")}</text>')
     return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" style="background:#fff;border-radius:8px;">'
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
+        f'preserveAspectRatio="xMidYMid meet" width="100%" height="auto" '
+        f'style="background:#fff;border-radius:8px;">'
         + "".join(grid)
         + f'<polyline fill="none" stroke="#1f4d2b" stroke-width="2" points="{polyline}"/>'
         + dots + "".join(x_labels) + '</svg>'
@@ -1120,7 +1122,7 @@ def caregiver_pair():
 
 
 # =========================================================
-# INVENTORY
+# INVENTORY + REFILL
 # =========================================================
 @app.route("/inventory", methods=["GET", "POST"])
 @login_required
@@ -1148,6 +1150,15 @@ def inventory():
         return redirect(url_for("inventory"))
     items = InventoryItem.query.filter_by(patient_id=session["user_id"]).all()
     return render_template("inventory.html", items=items)
+
+
+@app.route("/inventory/refill")
+@login_required
+def inventory_refill():
+    if session.get("role") != "patient":
+        return redirect(url_for("dashboard"))
+    items = InventoryItem.query.filter_by(patient_id=session["user_id"]).all()
+    return render_template("refill.html", items=items)
 
 
 # =========================================================
@@ -1307,7 +1318,6 @@ def ask():
 
         return redirect(url_for("ask"))
 
-    # GET — determine whether to keep or clear the history
     referer = request.headers.get("Referer", "")
     came_from_ask = "/ask" in referer
 

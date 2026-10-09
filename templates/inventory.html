@@ -35,7 +35,7 @@
       {% endfor %}
     </table>
 
-    <a href="#" class="btn btn-secondary btn-sm" style="margin-top: 14px;" onclick="alert('Refill checklist generated (demo).');">Generate pharmacy refill list</a>
+    <a href="{{ url_for('inventory_refill') }}" class="btn btn-lime btn-sm" style="margin-top: 14px;">🛒 Generate pharmacy refill list</a>
   {% else %}
     <p style="color: var(--muted);">No items tracked yet.</p>
   {% endif %}

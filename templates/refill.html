@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Pharmacy Refill List{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2 style="margin-top: 0;">🛒 Pharmacy Refill List</h2>
+  <p style="color: var(--muted);">
+    Take this list to your pharmacy. Items marked <span class="pill pill-danger">Low</span>
+    are below your threshold and should be refilled soon.
+  </p>
+
+  <table style="margin-top: 14px;">
+    <tr><th>Item</th><th>Current Stock</th><th>Low Threshold</th><th>Status</th><th>Suggested Order</th></tr>
+    {% for i in items %}
+      <tr>
+        <td><strong>{{ i.category|capitalize }}</strong></td>
+        <td>{{ i.quantity }}</td>
+        <td>{{ i.low_threshold }}</td>
+        <td>
+          {% if i.quantity <= i.low_threshold %}
+            <span class="pill pill-danger">Low</span>
+          {% elif i.quantity <= i.low_threshold * 2 %}
+            <span class="pill pill-warn">Amber</span>
+          {% else %}
+            <span class="pill pill-success">OK</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if i.quantity <= i.low_threshold %}
+            Order {{ (i.low_threshold * 3) - i.quantity }} more
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <div style="margin-top: 22px; padding: 14px; background: var(--cream-2); border-radius: 10px;">
+    <strong>Patient:</strong> {{ current_user.name }}<br>
+    <strong>Patient Code:</strong> {{ current_user.patient_code or '—' }}
+  </div>
+
+  <div style="margin-top: 20px;">
+    <button class="btn btn-lime" onclick="window.print()">🖨️ Print / Save as PDF</button>
+    <a href="{{ url_for('inventory') }}" class="btn btn-secondary">Back to Inventory</a>
+  </div>
+</div>
+{% endblock %}
