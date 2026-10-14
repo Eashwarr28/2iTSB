@@ -400,47 +400,7 @@ def check_champion(user_id):
         award_badge(user_id, "insulin_champion")
 
 
-def send_reset_email(to_email, code):
-    """Send a password reset code via Gmail SMTP. Returns True on success."""
-    if not MAIL_SENDER or not MAIL_APP_PASSWORD:
-        return False
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "2ITSB — Password Reset Code"
-        msg["From"] = f"2ITSB <{MAIL_SENDER}>"
-        msg["To"] = to_email
 
-        text = (
-            f"Your 2ITSB password reset code is: {code}\n\n"
-            f"This code expires in 15 minutes.\n"
-            f"If you didn't request this, please ignore the email.\n\n"
-            f"— 2ITSB Team"
-        )
-        html = f"""
-        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: auto;
-                    padding: 24px; background: #f6f3ea; border-radius: 12px;">
-          <h2 style="color: #1f4d2b; font-family: Georgia, serif;">2ITSB Password Reset</h2>
-          <p>Your password reset code is:</p>
-          <p style="font-size: 32px; font-weight: bold; letter-spacing: 6px;
-                    color: #1f4d2b; background: #fff; padding: 16px 24px;
-                    border-radius: 10px; display: inline-block;">{code}</p>
-          <p style="color: #6b7360; font-size: 14px;">This code expires in 15 minutes.
-             If you did not request this, you can safely ignore this email.</p>
-          <p style="color: #6b7360; font-size: 13px;">— The 2ITSB Team</p>
-        </div>
-        """
-
-        msg.attach(MIMEText(text, "plain"))
-        msg.attach(MIMEText(html, "html"))
-
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(MAIL_SENDER, MAIL_APP_PASSWORD)
-            server.send_message(msg)
-        return True
-    except Exception as e:
-        print("MAIL ERROR:", e)
-        return False
 
 # =========================================================
 # LANDING / AUTH
@@ -501,23 +461,16 @@ def forgot():
                 user.reset_code = code
                 user.reset_expires = datetime.utcnow() + timedelta(minutes=15)
                 db.session.commit()
-
-                sent = send_reset_email(user.email, code)
-                if sent:
-                    lookup_result = (
-                        "A reset code has been sent to your email. "
-                        "It is valid for 15 minutes. Check your inbox (and spam folder)."
-                    )
-                else:
-                    lookup_result = (
-                        f"A password reset code has been generated: "
-                        f"<strong>{code}</strong>. It is valid for 15 minutes. "
-                        f"Use it on the <a href='/reset'>Reset Password</a> page."
-                    )
+                lookup_result = (
+                    f"A password reset code has been generated: "
+                    f"<strong>{code}</strong>. It is valid for 15 minutes. "
+                    f"Use it on the <a href='/reset'>Reset Password</a> page."
+                )
             else:
                 lookup_result = "No account found with that email."
 
     return render_template("forgot.html", lookup_result=lookup_result)
+
 
 @app.route("/reset", methods=["GET", "POST"])
 def reset_password():
