@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Reset Password{% endblock %}
+
+{% block content %}
+<div class="card narrow" style="margin: 30px auto;">
+  <h2 style="margin-top: 0;">Reset your password</h2>
+  <p style="color: var(--muted); margin-top: 0;">Enter the reset code you received, then choose a new password.</p>
+
+  <form method="post">
+    <label>Email / Username</label>
+    <input type="email" name="email" required>
+
+    <label>Reset Code (6 digits)</label>
+    <input type="text" name="code" maxlength="6" pattern="[0-9]{6}" required>
+
+    <label>New Password</label>
+    <input type="password" name="new_password" required minlength="6">
+
+    <label>Confirm New Password</label>
+    <input type="password" name="confirm_password" required>
+
+    <button class="btn btn-lime btn-block" type="submit" style="margin-top: 18px;">
+      Reset Password <span class="btn-arrow">→</span>
+    </button>
+  </form>
+
+  <p style="margin-top: 20px; text-align: center; font-size: 13px;">
+    <a href="{{ url_for('forgot') }}">← Request a new code</a>
+  </p>
+</div>
+{% endblock %}

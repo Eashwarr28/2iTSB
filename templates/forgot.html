@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Forgot username or password{% endblock %}
+
+{% block content %}
+<div class="card narrow" style="margin: 30px auto;">
+  <h2 style="margin-top: 0;">Forgot username or password?</h2>
+  <p style="color: var(--muted); margin-top: 0;">Enter your account email below.</p>
+
+  {% if lookup_result %}
+    <div class="flash {% if 'No account' in lookup_result %}danger{% else %}success{% endif %}">{{ lookup_result|safe }}</div>
+  {% endif %}
+
+  <form method="post">
+    <label>Email / Username</label>
+    <input type="email" name="email" required autofocus>
+
+    <div style="display:flex; gap:10px; margin-top: 16px;">
+      <button class="btn btn-secondary" type="submit" name="action" value="username">Recover Username</button>
+      <button class="btn btn-lime" type="submit" name="action" value="password">Reset Password</button>
+    </div>
+  </form>
+
+  <p style="margin-top: 20px; text-align: center; font-size: 13px;">
+    {% if lookup_result and 'reset code' in lookup_result %}
+      <a href="{{ url_for('reset_password') }}">Go to Reset Password page →</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">← Back to login</a>
+    {% endif %}
+  </p>
+</div>
+{% endblock %}
