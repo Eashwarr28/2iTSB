@@ -1340,6 +1340,16 @@ def ask():
                            welcome=welcome)
 
 
+@app.route("/debug-mail")
+def debug_mail():
+    return {
+        "MAIL_SENDER": MAIL_SENDER,
+        "MAIL_APP_PASSWORD_length": len(MAIL_APP_PASSWORD) if MAIL_APP_PASSWORD else 0,
+        "MAIL_APP_PASSWORD_preview": MAIL_APP_PASSWORD[:3] + "..." if MAIL_APP_PASSWORD else "EMPTY"
+    }
+
+
+
 # =========================================================
 # MESSAGES
 # =========================================================
