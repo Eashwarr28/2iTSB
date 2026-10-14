@@ -32,7 +32,7 @@
     <a href="{{ url_for('register', role=role_hint) if role_hint else url_for('register_pick') }}">Register →</a>
   </p>
   <p style="text-align: center; font-size: 13px;">
-    <a href="#" onclick="alert('Please contact your administrator or use the demo accounts.'); return false;">Forgot username or password?</a>
+    <a href="{{ url_for('forgot') }}">Forgot username or password?</a>
   </p>
 </div>
 {% endblock %}
